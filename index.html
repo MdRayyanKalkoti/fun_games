@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Fun Games for Kids</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: #ff6b6b;
+        }
+
+        .game-card h3 {
+            font-size: 1.8rem;
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .game-content {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .math-problem {
+            font-size: 2rem;
+            margin: 1rem 0;
+            text-align: center;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .score {
+            font-size: 1.2rem;
+            color: #45b7d1;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            gap: 10px;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .memory-card {
+            width: 80px;
+            height: 80px;
+            background: #4ecdc4;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .memory-card.flipped {
+            background: #ff6b6b;
+            transform: rotateY(180deg);
+        }
+
+        .word-display {
+            font-size: 2rem;
+            color: #4ecdc4;
+            margin: 1rem 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .scrambled-word {
+            font-size: 1.8rem;
+            color: #ff6b6b;
+            margin: 1rem 0;
+            text-align: center;
+            letter-spacing: 5px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border-radius: 15px;
+            border: 3px solid #4ecdc4;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 10px;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .canvas-container {
+            text-align: center;
+        }
+
+        canvas {
+            border: 3px solid #4ecdc4;
+            border-radius: 15px;
+            cursor: crosshair;
+            background: white;
+        }
+
+        .color-palette {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .victory-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .victory-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 3rem;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: bounceIn 0.8s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .victory-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .victory-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffd93d;
+            animation: confetti-fall 3s linear infinite;
+            z-index: 999;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .ai-links {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .ai-links h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #ffd93d;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .ai-link {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .ai-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #ffd93d;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎮 Fun Games for Kids</h1>
+        <p>Play, learn, and have amazing adventures!</p>
+    </div>
+
+    <div class="container">
+        <div class="games-grid">
+            <!-- Math Quiz Game -->
+            <div class="game-card">
+                <h3>🔢 Simple Math Quiz</h3>
+                <div class="game-content" id="math-game">
+                    <div class="score">Score: <span id="math-score">0</span></div>
+                    <div class="math-problem" id="math-problem">Click Start to Begin!</div>
+                    <div>
+                        <button onclick="startMathGame()">Start Math Quiz</button>
+                        <button onclick="checkMathAnswer()" id="math-submit" style="display:none;">Submit Answer</button>
+                    </div>
+                    <input type="number" id="math-input" style="display:none;" placeholder="Your answer">
+                </div>
+            </div>
+
+            <!-- Word Scramble Game -->
+            <div class="game-card">
+                <h3>🔤 Word Scramble</h3>
+                <div class="game-content" id="word-game">
+                    <div class="score">Score: <span id="word-score">0</span></div>
+                    <div class="word-display" id="word-hint">Click Start to Play!</div>
+                    <div class="scrambled-word" id="scrambled-word"></div>
+                    <div>
+                        <button onclick="startWordGame()">Start Game</button>
+                        <button onclick="checkWordAnswer()" id="word-submit" style="display:none;">Check Answer</button>
+                    </div>
+                    <input type="text" id="word-input" style="display:none;" placeholder="Unscramble the word">
+                </div>
+            </div>
+
+            <!-- Memory Flip Game -->
+            <div class="game-card">
+                <h3>🧠 Memory Flip</h3>
+                <div class="game-content" id="memory-game">
+                    <div class="score">Pairs Found: <span id="memory-score">0</span>/3</div>
+                    <div class="memory-grid" id="memory-grid"></div>
+                    <button onclick="startMemoryGame()">New Game</button>
+                </div>
+            </div>
+
+            <!-- Doodle Pad -->
+            <div class="game-card">
+                <h3>🎨 Doodle Pad</h3>
+                <div class="game-content canvas-container">
+                    <canvas id="doodle-canvas" width="280" height="200"></canvas>
+                    <div class="color-palette">
+                        <div class="color-btn" style="background: #ff6b6b;" onclick="changeColor('#ff6b6b')"></div>
+                        <div class="color-btn" style="background: #4ecdc4;" onclick="changeColor('#4ecdc4')"></div>
+                        <div class="color-btn" style="background: #45b7d1;" onclick="changeColor('#45b7d1')"></div>
+                        <div class="color-btn" style="background: #ffd93d;" onclick="changeColor('#ffd93d')"></div>
+                        <div class="color-btn" style="background: #6c5ce7;" onclick="changeColor('#6c5ce7')"></div>
+                        <div class="color-btn" style="background: #fd79a8;" onclick="changeColor('#fd79a8')"></div>
+                    </div>
+                    <button onclick="clearCanvas()">Clear Canvas</button>
+                    <button onclick="showVictory()">Show My Art!</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-links">
+            <h3>🌟 More Fun Learning!</h3>
+            <div class="links-grid">
+                <a href="https://learn.khanacademy.org/khan-academy-kids/" class="ai-link" target="_blank">
+                    <strong>Khan Academy Kids</strong><br>
+                    Educational games and lessons
+                </a>
+                <a href="https://www.duolingo.com/" class="ai-link" target="_blank">
+                    <strong>Duolingo</strong><br>
+                    Learn new languages with fun
+                </a>
+                <a href="https://chat.openai.com/" class="ai-link" target="_blank">
+                    <strong>ChatGPT (Kids Tutor)</strong><br>
+                    AI helper for homework
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div class="victory-modal" id="victory-modal">
+        <div class="victory-content">
+            <h2>🎉 Amazing Job! 🎉</h2>
+            <p>You win a toffee! 🍬</p>
+            <button onclick="closeVictory()">Play More Games!</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State Variables
+        let mathScore = 0;
+        let wordScore = 0;
+        let memoryScore = 0;
+        let currentMathAnswer = 0;
+        let currentWord = '';
+        let memoryCards = [];
+        let flippedCards = [];
+        let canFlip = true;
+
+        // Drawing Variables
+        let canvas = document.getElementById('doodle-canvas');
+        let ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let currentColor = '#ff6b6b';
+
+        // Math Game
+        function startMathGame() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const operation = Math.random() > 0.5 ? '+' : '-';
+            
+            if (operation === '+') {
+                currentMathAnswer = num1 + num2;
+                document.getElementById('math-problem').textContent = `${num1} + ${num2} = ?`;
+            } else {
+                if (num1 >= num2) {
+                    currentMathAnswer = num1 - num2;
+                    document.getElementById('math-problem').textContent = `${num1} - ${num2} = ?`;
+                } else {
+                    currentMathAnswer = num2 - num1;
+                    document.getElementById('math-problem').textContent = `${num2} - ${num1} = ?`;
+                }
+            }
+            
+            document.getElementById('math-input').style.display = 'inline-block';
+            document.getElementById('math-submit').style.display = 'inline-block';
+            document.getElementById('math-input').focus();
+        }
+
+        function checkMathAnswer() {
+            const userAnswer = parseInt(document.getElementById('math-input').value);
+            if (userAnswer === currentMathAnswer) {
+                mathScore++;
+                document.getElementById('math-score').textContent = mathScore;
+                showVictory();
+                setTimeout(() => {
+                    document.getElementById('math-input').value = '';
+                    startMathGame();
+                }, 2000);
+            } else {
+                alert('Try again! You can do it! 😊');
+                document.getElementById('math-input').value = '';
+                document.getElementById('math-input').focus();
+            }
+        }
+
+        // Word Scramble Game
+        const words = [
+            { word: 'CAT', hint: 'Furry pet that meows' },
+            { word: 'DOG', hint: 'Furry friend that barks' },
+            { word: 'BALL', hint: 'Round toy you can throw' },
+            { word: 'SUN', hint: 'Bright yellow star in the sky' },
+            { word: 'TREE', hint: 'Tall plant with leaves' },
+            { word: 'FISH', hint: 'Swims in water' }
+        ];
+
+        function startWordGame() {
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            currentWord = randomWord.word;
+            
+            document.getElementById('word-hint').textContent = randomWord.hint;
+            document.getElementById('scrambled-word').textContent = scrambleWord(currentWord);
+            document.getElementById('word-input').style.display = 'inline-block';
+            document.getElementById('word-submit').style.display = 'inline-block';
+            document.getElementById('word-input').focus();
+        }
+
+        function scrambleWord(word) {
+            return word.split('').sort(() => Math.random() - 0.5).join(' ');
+        }
+
+        function checkWordAnswer() {
+            const userAnswer = document.getElementById('word-input').value.toUpperCase();
+            if (userAnswer === currentWord) {
+                wordScore++;
+                document.getElementById('word-score').textContent = wordScore;
+                showVictory();
+                setTimeout(() => {
+                    document.getElementById('word-input').value = '';
+                    startWordGame();
+                }, 2000);
+            } else {
+                alert('Keep trying! Think about the hint! 🤔');
+                document.getElementById('word-input').value = '';
+                document.getElementById('word-input').focus();
+            }
+        }
+
+        // Memory Game
+        function startMemoryGame() {
+            const emojis = ['🐶', '🐱', '🦊', '🐶', '🐱', '🦊'];
+            memoryCards = emojis.sort(() => Math.random() - 0.5);
+            flippedCards = [];
+            memoryScore = 0;
+            canFlip = true;
+            document.getElementById('memory-score').textContent = '0';
+            
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            
+            memoryCards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.textContent = '?';
+                card.onclick = () => flipCard(index, card);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(index, cardElement) {
+            if (!canFlip || flippedCards.includes(index) || flippedCards.length >= 2) return;
+            
+            cardElement.textContent = memoryCards[index];
+            cardElement.classList.add('flipped');
+            flippedCards.push(index);
+            
+            if (flippedCards.length === 2) {
+                canFlip = false;
+                setTimeout(() => {
+                    checkMemoryMatch();
+                }, 1000);
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [first, second] = flippedCards;
+            const cards = document.querySelectorAll('.memory-card');
+            
+            if (memoryCards[first] === memoryCards[second]) {
+                memoryScore++;
+                document.getElementById('memory-score').textContent = `${memoryScore}/3`;
+                if (memoryScore === 3) {
+                    setTimeout(showVictory, 500);
+                }
+            } else {
+                cards[first].textContent = '?';
+                cards[second].textContent = '?';
+                cards[first].classList.remove('flipped');
+                cards[second].classList.remove('flipped');
+            }
+            
+            flippedCards = [];
+            canFlip = true;
+        }
+
+        // Drawing Functions
+        function changeColor(color) {
+            currentColor = color;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Canvas Drawing Events
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch events for mobile
+        canvas.addEventListener('touchstart', handleTouch);
+        canvas.addEventListener('touchmove', handleTouch);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = currentColor;
+            
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function stopDrawing() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                            e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        // Victory Screen
+        function showVictory() {
+            document.getElementById('victory-modal').style.display = 'flex';
+            createConfetti();
+        }
+
+        function closeVictory() {
+            document.getElementById('victory-modal').style.display = 'none';
+        }
+
+        function createConfetti() {
+            const colors = ['#ffd93d', '#ff6b6b', '#4ecdc4', '#45b7d1', '#6c5ce7'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+
+        // Allow Enter key for inputs
+        document.getElementById('math-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkMathAnswer();
+        });
+
+        document.getElementById('word-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkWordAnswer();
+        });
+
+        // Initialize memory game on load
+        startMemoryGame();
+    </script>
+</body>
+</html>
